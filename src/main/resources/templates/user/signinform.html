@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <style>
+        #selfAddInputDiv{
+            display : none;
+        }
+        .failValidation{
+            background-color : rgb(255,000,051,0.5);
+        }
+    </style>
+</head>
+<body>
+    <form method="post" action="서버의url" id="siginin-form">
+        <label for="addressId">이메일</label>
+            <input type = "text" id = "addressId">
+            <select  name="mailAddress" id="mailAddress">
+                <option value="@gmail.com">@gmail.com</option>
+                <option value="@naver.com">@naver.com</option>
+                <option value="@hanmail.net">@hanmail.net</option>
+                <option value="@kakao.com">@kakao.com</option>
+                <option value="selfInput">직접입력</option>
+            </select>
+            <div id="selfAddInputDiv">
+                <input type="text" id="mailAddressSelf"><button type="button" onclick="cancelSelfAddInput()">취소</button>
+            </div>
+            <button type="button" onclick="dupltestEmail()" id="duplTestBtn">중복검사</button>
+        <label for="passwd">비밀번호</label> <input type="password" id="passwd">
+        <label for="passwdCk">비밀번호 확인</label> <input type="password" id="passwdCk">
+        <label for="userName">이름</label><input type="text" id="userName">
+        <label for="userName">닉네임</label><input type="text" id="userNickName">
+        <label for="telNum">연락처</label><input type="number" id="telNum" maxlength="11">
+        <span>본인 인증 방법</span>
+        <input type="radio" id="identifyByEmail"><label for="identifyByEmail">Email 인증</label>
+        <input type="radio" id="identifyByComfort"><label for="identifyByComfort">간편 인증</label> <!--추후 포트윈 사용하면 될듯 -->
+        <div id="flexDiv">
+            <button type="submit">Login</button>
+            <button type="button">Find Id/Passwd</button>
+        </div>
+    </form>
+</body>
+<script>
+    let ckEmail = 1; //이메일 중복검사 여부
+
+    //직접입력 설정
+    document.getElementById("mailAddress").addEventListener("change", function(){
+        let target = this.value;
+        if(target == 'selfInput'){
+             document.getElementById("mailAddress").style.display = 'none';
+            document.getElementById("selfAddInputDiv").style.display = 'inline';
+        }
+
+        ckEmail = 1;
+
+    });
+
+    //직접입력 취소
+    function cancelSelfAddInput(){
+         document.getElementById("mailAddress").style.display = 'inline';
+         document.getElementById("selfAddInputDiv").style.display = 'none';
+         document.getElementById("mailAddress")[0].selected = true;
+          ckEmail = 1;
+    }
+
+    //email - 중복검사
+    function dupltestEmail(){
+           let mailAddress = document.querySelector('#mailAddress');
+           let addressId = document.querySelector('#addressId');
+
+           let email;
+           //이메일 직접 입력 아닐 때
+           if(mailAddress.options[mailAddress.selectedIndex].value != 'selfInput'){
+                email = addressId.value.trim() + mailAddress.options[mailAddress.selectedIndex].value;
+           }else{
+                //이메일 직접입력 일 때
+                email = addressId.value.trim() + document.querySelector('#mailAddressSelf').value;
+           }
+
+           //추후 검사하는 아작스/패치 필요
+
+    }
+
+    //유효성 검사
+    function ckValidation(){
+          let ckValidation = 1;
+
+            //이메일 중복 검사 확인
+           if(ckEmail = 1){
+                document.querySelector('#duplTestBtn').className += 'failValidation';
+                ckValidation = 2;
+           }
+
+            //비밀번호 유효성 검사 체크 - 빈값 체크
+            if(document.querySelector('#passwd').value.trim().length == 0){
+                document.querySelector('#passwd').className += 'failValidation';
+                ckValidation = 2;
+            }
+
+            //비밀번호 확인 체크 - 빈값일때 or 다를때 ;;
+            let passwdCk = document.querySelector('#passwdCk');
+            if(passwdCk.value.trim().length <0){
+                passwdCk.className += 'failValidation';
+                  passwdCk.placeholder = '비밀번호 확인을 해주세요';
+            }
+
+            if(passwdCk.value.trim().length >0 && this.value.trim() != passwdCk.value.trim()){
+                passwdCk.className += 'failValidation';
+                passwdCk.placeholder = '비밀번호와 일치하지 않습니다';
+            }
+
+            if(document.querySelector('#userName').value.trim().length == 0) {
+                document.querySelector('#userName').className += 'failValidation';
+            }
+
+            if(document.querySelector('#telNum').value.trim().length == 0){
+
+            }
+
+    }
+
+
+
+
+</script>
+</html>
